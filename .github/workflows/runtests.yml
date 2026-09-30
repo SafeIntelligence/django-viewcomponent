@@ -8,6 +8,22 @@ on:
 
 jobs:
 
+  django-current:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+        django-version: ['6.0', '6.1']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: python -m pip install -e . "Django~=${{ matrix.django-version }}.0" pytest pytest-django pytest-mock beautifulsoup4 jinja2
+      - name: Run tests
+        run: python -m pytest -q
+
   code-style-check:
     runs-on: ubuntu-latest
     steps:
